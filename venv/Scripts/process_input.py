@@ -12,7 +12,7 @@ with open(r'C:\Users\MaríaJosé\PycharmProjects\ProyectoIA\AI-Project\input\Inp
         lista.append(row[0].split(';'))
 
 
-print(lista)
+
 for l in lista:
 
     if l[1] not in ids:
@@ -25,15 +25,14 @@ for i in ids:
     for j in lista:
 
         if j[1] == i:
-
-
             especialidades.append(j[2])
-
-
+            if j[2] != 'ING':
+                borrar = False
+                break
     if borrar == True:
         ids_por_borrar.append(i)
 
-
+print(ids_por_borrar)
 
 
 
