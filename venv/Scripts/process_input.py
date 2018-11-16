@@ -48,11 +48,13 @@ lista = lista[1:]
 
 for i in lista:
     id_oficiales.append(i[1])
-    semestres.append((i[0]))
+    semestres.append(int(i[0]))
     ramos.append(i[4])
 id_oficiales = list(set(id_oficiales))
-semestres = list(set(semestres))
-ramos = list(set(ramos))
+semestres = sorted(list(set(semestres)))
+ramos = sorted(list(set(ramos)))
+print(semestres)
+
 
 for id in id_oficiales:
     info = []
@@ -113,8 +115,6 @@ for id in id_icc_oficiales: #aqui poner la lista que correremos
                             agregarCero = False
             if agregarCero:
                 matriz[-1].append(str(0))
-
-    break
 
 for l in matriz:
     print(len(l))
