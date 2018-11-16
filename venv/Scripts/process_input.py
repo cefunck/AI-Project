@@ -13,6 +13,16 @@ id_ici = []
 id_ico = []
 id_ice = []
 
+def uniq(lst):
+    bla = []
+    for l in lst:
+        bla.append(";".join(l))
+    bla = list(set(bla))
+    lst = []
+    for l in bla:
+        lst.append(l.split(";"))
+    return lst
+
 file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Input.csv', 'r')
 for i in file.readlines():
     lista.append(i.split(';'))
@@ -67,8 +77,10 @@ for id in id_oficiales:
 print("icc: ",len(id_icc)," ice: ",len(id_ice)," ico: ",len(id_ico)," ici: ",len(id_ici))
 
 for i in semestres:
+    print(ramos)
     for j in ramos:
         matriz[-1].append(j)
+
 id_icc_oficiales = []
 id_ice_oficiales = []
 id_ico_oficiales = []
@@ -86,28 +98,24 @@ for i in range((min(len(id_icc),len(id_ice),len(id_ici),len(id_ico)))):
 
 print("icc oficial: ",len(id_icc_oficiales)," ice oficial: ",len(id_ice_oficiales)," ico oficial: ",len(id_ico_oficiales)," ici oficial: ",len(id_ici_oficiales))
 
+lista = uniq(lista)
+
 for id in id_icc_oficiales: #aqui poner la lista que correremos
     matriz.append([])
     for s in semestres:
         for r in ramos:
             for line in lista:
-                if line[0] == s:
-                    if line[1] == id:
-                        if line[4] == r:
-                            matriz[-1].append(line[5][:-1])
-                        else:
-                            matriz[-1].append(0)
+                if line[0] == s and line[1] == id and line[4] == r:
+                            matriz[-1].append(str(line[5][:-1]))
+                else:
+                    matriz[-1].append(str(0))
+
     break
 
-def uniq(lst):
-    return list(set(lst))
-
 for l in matriz:
-    print(";".join(l))
+    print(len(l))
     linea = ";".join(l)+'\r\n'
     lista_limpia_oficial.append(linea)
-
-lista_limpia_oficial = uniq(lista_limpia_oficial)
 
 file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Output.csv','w')
 for i in lista_limpia_oficial:
