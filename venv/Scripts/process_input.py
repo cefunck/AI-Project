@@ -104,11 +104,15 @@ for id in id_icc_oficiales: #aqui poner la lista que correremos
     matriz.append([])
     for s in semestres:
         for r in ramos:
+            agregarCero = True;
             for line in lista:
-                if line[0] == s and line[1] == id and line[4] == r:
+                if line[0] == s:
+                    if line[1] == id:
+                        if line[4] == r:
                             matriz[-1].append(str(line[5][:-1]))
-                else:
-                    matriz[-1].append(str(0))
+                            agregarCero = False
+            if agregarCero:
+                matriz[-1].append(str(0))
 
     break
 
