@@ -102,13 +102,13 @@ print("icc oficial: ",len(id_icc_oficiales)," ice oficial: ",len(id_ice_oficiale
 
 lista = uniq(lista)
 
-for id in id_icc_oficiales: #aqui poner la lista que correremos
+for id in id_ico_oficiales: #aqui poner la lista que correremos
     matriz.append([])
     for s in semestres:
         for r in ramos:
             agregarCero = True;
             for line in lista:
-                if line[0] == s:
+                if line[0] == str(s):
                     if line[1] == id:
                         if line[4] == r:
                             matriz[-1].append(str(line[5][:-1]))
@@ -124,3 +124,9 @@ for l in matriz:
 file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Output.csv','w')
 for i in lista_limpia_oficial:
     file.write(i)
+
+def notaNormalizada(strNota):
+    if(strNota == str(0)):
+        return "-1"
+    n = ((float(nota)-1)/6.0)
+    return str(n)
