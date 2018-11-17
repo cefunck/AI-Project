@@ -23,7 +23,7 @@ data = []
 for line in csv:
     data.append([])
     for i in line:
-        data[-1].append(tf.float32(i))
+        data[-1].append(float(i))
 data = np.array(data)
 
 INGC = np.array([1,0,0,0])
