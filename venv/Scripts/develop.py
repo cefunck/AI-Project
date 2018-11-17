@@ -5,18 +5,21 @@ import matplotlib.pyplot as plt
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
+
+
 print("Shape of feature matrix:", mnist.train.images.shape)
 print("Shape of target matrix:", mnist.train.labels.shape)
 print("One-hot encoding for 1st observation:\n", mnist.train.labels[0])
 
 # visualize data by plotting images
-fig,ax = plt.subplots(10,10)
-k = 0
-for i in range(10):
-	for j in range(10):
-		ax[i][j].imshow(mnist.train.images[k].reshape(28,28), aspect='auto')
-		k += 1
-plt.show()
+#fig,ax = plt.subplots(10,10)
+#k = 0
+#for i in range(10):
+	#for j in range(10):
+	#	ax[i][j].imshow(mnist.train.images[k].reshape(28,28), aspect='auto')
+	#	k += 1
+#plt.show()
+
 
 # number of features
 num_features = 784
