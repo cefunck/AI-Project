@@ -23,7 +23,7 @@ def uniq(lst):
         lst.append(l.split(";"))
     return lst
 
-file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Input.csv', 'r')
+file = open(r'C:\Users\paulo\PycharmProjects\AI-Project\input\Input.csv', 'r')
 for i in file.readlines():
     lista.append(i.split(';'))
 

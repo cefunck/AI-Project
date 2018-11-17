@@ -3,9 +3,9 @@ import numpy as np
 
 csv = []
 
-file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Normalizado.csv', 'r')
+file = open(r'C:\Users\paulo\PycharmProjects\AI-Project\input\Normalizado.csv', 'r')
 for i in file.readlines():
-    csv.append(i.split(';'))
+	csv.append(i.split(';'))
 
 # number of features
 num_features = len(csv[0])
@@ -65,8 +65,8 @@ with graph.as_default():
 	# Inputs
 	tf_train_dataset = tf.placeholder(tf.float32, shape=(batch_size, num_features))
 	tf_train_labels = tf.placeholder(tf.float32, shape=(batch_size, num_labels))
-	tf_valid_dataset = tf.constant(valid_dataset)
-	tf_test_dataset = tf.constant(test_dataset)
+	tf_valid_dataset = tf.constant(valid_dataset,tf.float32)
+	tf_test_dataset = tf.constant(test_dataset,tf.float32)
 
 	# Variables.
 	weights = tf.Variable(tf.truncated_normal([num_features, num_labels]))
@@ -74,7 +74,7 @@ with graph.as_default():
 
 	# Training computation.
 	logits = tf.matmul(tf_train_dataset, weights) + biases
-	loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=tf_train_labels, logits=logits))
+	loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=tf_train_labels, logits=logits))
 
 	# Optimizer.
 	optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
@@ -83,3 +83,4 @@ with graph.as_default():
 	train_prediction = tf.nn.softmax(logits)
 	valid_prediction = tf.nn.softmax(tf.matmul(tf_valid_dataset, weights) + biases)
 	test_prediction = tf.nn.softmax(tf.matmul(tf_test_dataset, weights) + biases)
+
