@@ -17,7 +17,7 @@ num_features = len(normalizado[0])
 # number of target labels
 num_labels = 4
 # learning rate (alpha)
-learning_rate = 0.05
+learning_rate = 0.5
 # batch size
 batch_size = 210
 # number of epochs
@@ -112,7 +112,7 @@ with tf.Session(graph=graph) as session:
         # run one step of computation
         _, l, predictions = session.run([optimizer, loss, train_prediction],feed_dict=feed_dict)
 
-        if (step % 500 == 0):
+        if (step % 50 == 0):
             print("Minibatch loss at step {0}: {1}".format(step, l))
             print("Minibatch accuracy: {:.1f}%".format(accuracy(predictions, batch_labels)))
             print("Validation accuracy: {:.1f}%".format(accuracy(valid_prediction.eval(), valid_labels)))
