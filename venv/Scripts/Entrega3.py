@@ -1,48 +1,49 @@
 import tensorflow as tf
 import numpy as np
+import random as rand
 
-csv = []
-
-file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Normalizado.csv', 'r')
+normalizado = []
+labels = []
+file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\NormalizadoOficial.csv', 'r')
 for i in file.readlines():
-    csv.append(i.split(';'))
+    normalizado.append(i.split(';'))
+
+file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\labelsOficial.csv', 'r')
+for i in file.readlines():
+    labels.append(i[1:-2].split(" "))
 
 # number of features
-num_features = len(csv[0])
+num_features = len(normalizado[0])
 # number of target labels
 num_labels = 4
 # learning rate (alpha)
 learning_rate = 0.05
 # batch size
-batch_size = 1
+batch_size = 210
 # number of epochs
-num_steps = len(csv)
+num_steps = 10000
 
 # input data
 data = []
-for line in csv:
+labelSet = []
+for line in normalizado:
     data.append([])
     for i in line:
         data[-1].append(float(i))
-data = np.array(data)
+for i in labels:
+    onehot = []
+    for j in i:
+        onehot.append(float(j))
+    onehot = np.array(onehot)
+    labelSet.append(onehot)
 
 INGC = np.array([1, 0, 0, 0])
 INGE = np.array([0, 1, 0, 0])
 INGO = np.array([0, 0, 1, 0])
 INGI = np.array([0, 0, 0, 1])
 
-labelSet = []
-for i in range(77):
-    labelSet.append(INGC)
-for i in range(77):
-    labelSet.append(INGE)
-for i in range(77):
-    labelSet.append(INGO)
-for i in range(77):
-    labelSet.append(INGI)
-
 labelSet = np.array(labelSet)
-
+data = np.array(data)
 # 70% train 20% test 10%valid
 idx70 = int((len(data) / 100.0) * 70)
 idx90 = int((len(data) / 100.0) * 90)
@@ -106,12 +107,10 @@ with tf.Session(graph=graph) as session:
         batch_labels = train_labels[offset:(offset + batch_size), :]
 
         # Prepare the feed dict
-        feed_dict = {tf_train_dataset: batch_data,
-                     tf_train_labels: batch_labels}
+        feed_dict = {tf_train_dataset: batch_data,tf_train_labels: batch_labels}
 
         # run one step of computation
-        _, l, predictions = session.run([optimizer, loss, train_prediction],
-                                        feed_dict=feed_dict)
+        _, l, predictions = session.run([optimizer, loss, train_prediction],feed_dict=feed_dict)
 
         if (step % 500 == 0):
             print("Minibatch loss at step {0}: {1}".format(step, l))
