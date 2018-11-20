@@ -1,14 +1,18 @@
 import tensorflow as tf
 import numpy as np
 import random as rand
+import matplotlib.pyplot as plt
+import datetime
 
+start = datetime.datetime.now()
 normalizado = []
 labels = []
-file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\NormalizadoOficial.csv', 'r')
+
+file = open(r'NormalizadoOficial.csv', 'r')
 for i in file.readlines():
     normalizado.append(i.split(';'))
 
-file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\labelsOficial.csv', 'r')
+file = open(r'labelsOficial.csv', 'r')
 for i in file.readlines():
     labels.append(i[1:-2].split(" "))
 
@@ -17,11 +21,17 @@ num_features = len(normalizado[0])
 # number of target labels
 num_labels = 4
 # learning rate (alpha)
-learning_rate = 0.5
+learning_rate = 0.1 #0.5
 # batch size
-batch_size = 210
+batch_size = 50 #210
 # number of epochs
-num_steps = 10000
+num_steps = 10000 #10000
+
+# data to plot
+x = range(num_steps)
+y1 = []
+y2 = []
+
 
 # input data
 data = []
@@ -112,10 +122,20 @@ with tf.Session(graph=graph) as session:
         # run one step of computation
         _, l, predictions = session.run([optimizer, loss, train_prediction],feed_dict=feed_dict)
 
-        if (step % 50 == 0):
+        if (step % 1 == 0):
             print("Minibatch loss at step {0}: {1}".format(step, l))
-            print("Minibatch accuracy: {:.1f}%".format(accuracy(predictions, batch_labels)))
-            print("Validation accuracy: {:.1f}%".format(accuracy(valid_prediction.eval(), valid_labels)))
+            y = accuracy(predictions, batch_labels)
+            print("Minibatch accuracy: {:.1f}%".format(y))
+            y1.append(y)
+            y = accuracy(valid_prediction.eval(), valid_labels)
+            print("Validation accuracy: {:.1f}%".format(y))
+            y2.append(y)
 
-    print("\nTest accuracy: {:.1f}%".format(
-        accuracy(test_prediction.eval(), test_labels)))
+    print("\nTest accuracy: {:.1f}%".format(accuracy(test_prediction.eval(), test_labels)))
+end = datetime.datetime.now()
+
+print("time",str(end-start))
+plt.plot(x, y1, x, y2)
+plt.legend(['Minibatch accuracy', 'Validation accuracy'])
+plt.show()
+
