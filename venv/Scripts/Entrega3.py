@@ -16,21 +16,27 @@ file = open(r'labelsOficial.csv', 'r')
 for i in file.readlines():
     labels.append(i[1:-2].split(" "))
 
+
 # number of features
 num_features = len(normalizado[0])
 # number of target labels
 num_labels = 4
 # learning rate (alpha)
-learning_rate = 0.1 #0.5
+learning_rate = 0.005 #0.5 #0.005
+# Num Hidden Layers
+numHiddenLayers = 3
+# Num nodes first hidden layer
+numNodes = num_labels+1
 # batch size
-batch_size = 50 #210
+batch_size = 213 #213
 # number of epochs
-num_steps = 10000 #10000
-
+num_steps = 100000 #10000
 # data to plot
+nameFig = r"\ learning_rate_"+str(learning_rate)+" batch_size_"+str(batch_size)+" num_steps_"+str(num_steps)+" numHiddenLayers_"+str(numHiddenLayers)+" numNodes_"+str(numNodes)
 x = range(num_steps)
 y1 = []
 y2 = []
+Yloss = []
 
 
 # input data
@@ -68,6 +74,7 @@ valid_labels = labelSet[idx90:]
 # initialize a tensorflow graph
 graph = tf.Graph()
 
+
 with graph.as_default():
     """ 
 	defining all the nodes 
@@ -79,21 +86,33 @@ with graph.as_default():
     tf_valid_dataset = tf.constant(valid_dataset, tf.float32)
     tf_test_dataset = tf.constant(test_dataset, tf.float32)
 
+    # Variables2.
+    weights2 = tf.Variable(tf.truncated_normal([num_features, numNodes]))
+    biases2 = tf.Variable(tf.zeros([numNodes]))
+
+    # Training computation 2.
+    logitsTrain2 = tf.matmul(tf_train_dataset, weights2) + biases2
+    logitsValid2 = tf.matmul(tf_valid_dataset, weights2) + biases2
+    logitsTest2 = tf.matmul(tf_test_dataset, weights2) + biases2
+
     # Variables.
-    weights = tf.Variable(tf.truncated_normal([num_features, num_labels]))
+    weights = tf.Variable(tf.truncated_normal([numNodes, num_labels]))
     biases = tf.Variable(tf.zeros([num_labels]))
 
     # Training computation.
-    logits = tf.matmul(tf_train_dataset, weights) + biases
-    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=tf_train_labels, logits=logits))
-
-    # Optimizer.
-    optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
+    logitsTrain = tf.matmul(logitsTrain2, weights) + biases
+    logitsValid = tf.matmul(logitsValid2, weights) + biases
+    logitsTest = tf.matmul(logitsTest2, weights) + biases
 
     # Predictions for the training, validation, and test data.
-    train_prediction = tf.nn.softmax(logits)
-    valid_prediction = tf.nn.softmax(tf.matmul(tf_valid_dataset, weights) + biases)
-    test_prediction = tf.nn.softmax(tf.matmul(tf_test_dataset, weights) + biases)
+    train_prediction = tf.nn.softmax(logitsTrain)
+    valid_prediction = tf.nn.softmax(logitsValid)
+    test_prediction = tf.nn.softmax(logitsTest)
+
+    # Loss
+    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=tf_train_labels, logits=logitsTrain))
+    # Optimizer.
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
 
 # utility function to calculate accuracy
@@ -120,22 +139,33 @@ with tf.Session(graph=graph) as session:
         feed_dict = {tf_train_dataset: batch_data,tf_train_labels: batch_labels}
 
         # run one step of computation
-        _, l, predictions = session.run([optimizer, loss, train_prediction],feed_dict=feed_dict)
+        _,l,predictions = session.run([optimizer, loss, train_prediction],feed_dict=feed_dict)
 
         if (step % 1 == 0):
             print("Minibatch loss at step {0}: {1}".format(step, l))
             y = accuracy(predictions, batch_labels)
+            Yloss.append(l)
             print("Minibatch accuracy: {:.1f}%".format(y))
             y1.append(y)
             y = accuracy(valid_prediction.eval(), valid_labels)
             print("Validation accuracy: {:.1f}%".format(y))
+            if(y>=77.4):
+                break
             y2.append(y)
 
     print("\nTest accuracy: {:.1f}%".format(accuracy(test_prediction.eval(), test_labels)))
 end = datetime.datetime.now()
 
 print("time",str(end-start))
+plt.figure()
+
 plt.plot(x, y1, x, y2)
+plt.plot(x,Yloss)
 plt.legend(['Minibatch accuracy', 'Validation accuracy'])
+#plt.show()
+nameFig = r"C:\Users\Cristian\PycharmProjects\AI-Project\registro plots"+nameFig+".png"
+#nameFig = r"C:\Users\Cristian\Desktop"+nameFig+".png"
+plt.savefig(nameFig)
 plt.show()
+
 
