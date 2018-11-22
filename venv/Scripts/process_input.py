@@ -1,10 +1,12 @@
 import random as rand
+import csv
 
 lista = []
 ids = []
 ids_por_borrar = []
 lista_limpia_oficial = []
 id_oficiales = []
+labels_oficiales = []
 semestres = []
 ramos = []
 matriz = [[]]
@@ -23,7 +25,7 @@ def uniq(lst):
         lst.append(l.split(";"))
     return lst
 
-file = open(r'C:\Users\paulo\PycharmProjects\AI-Project\input\Input.csv', 'r')
+file = open(r'C:\Users\MaríaJosé\Desktop\Base de datos proyecto final csv.csv', 'r')
 for i in file.readlines():
     lista.append(i.split(';'))
 
@@ -53,7 +55,7 @@ for i in lista:
 id_oficiales = list(set(id_oficiales))
 semestres = sorted(list(set(semestres)))
 ramos = sorted(list(set(ramos)))
-print(semestres)
+#print(semestres)
 
 
 for id in id_oficiales:
@@ -76,10 +78,28 @@ for id in id_oficiales:
     elif definitiva[2] == "INGI":
         id_ici.append(definitiva[1])
 
-print("icc: ",len(id_icc)," ice: ",len(id_ice)," ico: ",len(id_ico)," ici: ",len(id_ici))
+id_oficiales = []
+
+for i in id_icc:
+    id_oficiales.append(i)
+    labels_oficiales.append('[1 0 0 0]')
+
+for i in id_ice:
+    id_oficiales.append(i)
+    labels_oficiales.append('[0 1 0 0]')
+
+for i in id_ico:
+    id_oficiales.append(i)
+    labels_oficiales.append('[0 0 1 0]')
+
+for i in id_ici:
+    id_oficiales.append(i)
+    labels_oficiales.append('[0 0 0 1]')
+
+#print("icc: ",len(id_icc)," ice: ",len(id_ice)," ico: ",len(id_ico)," ici: ",len(id_ici))
 
 for i in semestres:
-    print(ramos)
+    #print(ramos)
     for j in ramos:
         matriz[-1].append(j)
 
@@ -98,11 +118,11 @@ for i in range((min(len(id_icc),len(id_ice),len(id_ici),len(id_ico)))):
     id_ico_oficiales.append(id_ico.pop(idx_ico))
     id_ici_oficiales.append(id_ici.pop(idx_ici))
 
-print("icc oficial: ",len(id_icc_oficiales)," ice oficial: ",len(id_ice_oficiales)," ico oficial: ",len(id_ico_oficiales)," ici oficial: ",len(id_ici_oficiales))
+#print("icc oficial: ",len(id_icc_oficiales)," ice oficial: ",len(id_ice_oficiales)," ico oficial: ",len(id_ico_oficiales)," ici oficial: ",len(id_ici_oficiales))
 
 lista = uniq(lista)
 
-for id in id_ico_oficiales: #aqui poner la lista que correremos
+for id in id_oficiales: #aqui poner la lista que correremos
     matriz.append([])
     for s in semestres:
         for r in ramos:
@@ -116,17 +136,23 @@ for id in id_ico_oficiales: #aqui poner la lista que correremos
             if agregarCero:
                 matriz[-1].append(str(0))
 
-for l in matriz:
-    print(len(l))
+for l in matriz[1:]:
+
     linea = ";".join(l)+'\r\n'
     lista_limpia_oficial.append(linea)
 
-file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Output.csv','w')
+file = open(r'C:\Users\MaríaJosé\PycharmProjects\ProyectoIA\AI-Project\input\Output2veroficiales.csv','w')
 for i in lista_limpia_oficial:
     file.write(i)
 
-def notaNormalizada(strNota):
-    if(strNota == str(0)):
-        return "-1"
-    n = ((float(nota)-1)/6.0)
-    return str(n)
+
+lista_limpia_oficial_2 = []
+for l in labels_oficiales:
+    linea = " ".join(l)+'\r\n'
+
+    lista_limpia_oficial_2.append(linea)
+
+file = open(r'C:\Users\MaríaJosé\PycharmProjects\ProyectoIA\AI-Project\input\Labels_oficiales_cote.csv','w')
+for i in lista_limpia_oficial_2:
+    file.write(i)
+
