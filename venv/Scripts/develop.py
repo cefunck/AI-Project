@@ -91,12 +91,10 @@ with tf.Session(graph=graph) as session:
 		batch_labels = train_labels[offset:(offset + batch_size), :]
 
 		# Prepare the feed dict
-		feed_dict = {tf_train_dataset : batch_data,
-					tf_train_labels : batch_labels}
+		feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels}
 
 		# run one step of computation
-		_, l, predictions = session.run([optimizer, loss, train_prediction],
-										feed_dict=feed_dict)
+		_, l, predictions = session.run([optimizer, loss, train_prediction], feed_dict=feed_dict)
 
 		if (step % 500 == 0):
 			print("Minibatch loss at step {0}: {1}".format(step, l))
