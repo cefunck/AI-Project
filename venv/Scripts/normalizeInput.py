@@ -8,7 +8,7 @@ def notaNormalizada(strNota):
 csv = []
 csvOficial = []
 csvOficial2 = []
-file = open(r'C:\Users\MaríaJosé\PycharmProjects\ProyectoIA\AI-Project\input\Output2vSB.csv', 'r')
+file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Output2vSB.csv', 'r')
 for i in file.readlines():
     csv.append(i.split(';'))
 
@@ -21,7 +21,7 @@ for l in csvOficial:
     linea = ";".join(l)+'\r\n'
     csvOficial2.append(linea)
 
-file = open(r'C:\Users\MaríaJosé\PycharmProjects\ProyectoIA\AI-Project\input\OFICIAL.csv','w')
+file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\OFICIAL.csv','w')
 for i in csvOficial2:
     file.write(i)
 

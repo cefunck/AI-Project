@@ -2,6 +2,7 @@ import random as rand
 import csv
 
 lista = []
+listaInfo = []
 ids = []
 ids_por_borrar = []
 lista_limpia_oficial = []
@@ -25,9 +26,14 @@ def uniq(lst):
         lst.append(l.split(";"))
     return lst
 
-file = open(r'C:\Users\MaríaJosé\Desktop\Base de datos proyecto final csv.csv', 'r')
+file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\base_dato_muestra.csv', 'r')
 for i in file.readlines():
     lista.append(i.split(';'))
+
+file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Input.csv', 'r')
+for i in file.readlines():
+    listaInfo.append(i.split(';'))
+listaInfo = listaInfo[1:]
 
 for l in lista:
     if l[1] not in ids:
@@ -41,15 +47,35 @@ for i in ids:
             break
     if borrar == True:
         ids_por_borrar.append(i)
-
 for l in lista:
     if l[1] in ids_por_borrar:
         lista.remove(l)
 lista = lista[1:]
 
+for i in ids:
+    borrar = True
+    for j in listaInfo:
+        if j[1] == i and j[2] != 'ING':
+            borrar = False
+            break
+    if borrar == True:
+        ids_por_borrar.append(i)
+for l in listaInfo:
+    if l[1] in ids_por_borrar:
+        listaInfo.remove(l)
+
+
+
 
 for i in lista:
     id_oficiales.append(i[1])
+    semestres.append(int(i[0]))
+    ramos.append(i[4])
+id_oficiales = list(set(id_oficiales))
+#semestres = sorted(list(set(semestres)))
+#ramos = sorted(list(set(ramos)))
+
+for i in listaInfo:
     semestres.append(int(i[0]))
     ramos.append(i[4])
 id_oficiales = list(set(id_oficiales))
@@ -141,7 +167,7 @@ for l in matriz[1:]:
     linea = ";".join(l)+'\r\n'
     lista_limpia_oficial.append(linea)
 
-file = open(r'C:\Users\MaríaJosé\PycharmProjects\ProyectoIA\AI-Project\input\Output2veroficiales.csv','w')
+file = open(r'C:\Users\Cristian\Desktop\EjemploProyectoFinal.csv','w')
 for i in lista_limpia_oficial:
     file.write(i)
 
@@ -152,7 +178,7 @@ for l in labels_oficiales:
 
     lista_limpia_oficial_2.append(linea)
 
-file = open(r'C:\Users\MaríaJosé\PycharmProjects\ProyectoIA\AI-Project\input\Labels_oficiales_cote.csv','w')
+file = open(r'C:\Users\Cristian\PycharmProjects\AI-Project\input\Labels_oficiales_cote.csv','w')
 for i in lista_limpia_oficial_2:
     file.write(i)
 
